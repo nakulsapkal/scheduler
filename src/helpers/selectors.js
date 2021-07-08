@@ -1,4 +1,5 @@
 export function getAppointmentsForDay(state, day) {
+  console.log("State,Day:", state, day);
   let resultObj = [];
   for (const key in state.days) {
     if (Object.hasOwnProperty.call(state.days, key)) {
