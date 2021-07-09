@@ -37,7 +37,7 @@ export default function Form(props) {
           <Button danger onClick={cancel}>
             Cancel
           </Button>
-          <Button confirm onClick={(event) => props.onSave(name, interviewer)}>
+          <Button confirm onClick={() => props.onSave(name, interviewer)}>
             Save
           </Button>
         </section>
