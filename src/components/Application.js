@@ -3,7 +3,11 @@ import Axios from "axios";
 import Appointment from "components/Appointment";
 import "components/Application.scss";
 import DayList from "./DayList";
-import { getAppointmentsForDay } from "helpers/selectors";
+import {
+  getAppointmentsForDay,
+  getInterview,
+  getInterviewersForDay,
+} from "helpers/selectors";
 
 export default function Application(props) {
   // const [day, setDay] = useState("Monday");
@@ -15,9 +19,8 @@ export default function Application(props) {
     days: [],
     // you may put the line below, but will have to remove/comment hardcoded appointments variable
     appointments: {},
+    interviewers: {},
   });
-
-  const dailyAppointments = getAppointmentsForDay(state, state.day);
 
   useEffect(() => {
     // const url = `/api/days`;
@@ -39,20 +42,41 @@ export default function Application(props) {
         ...prev,
         days: first.data,
         appointments: second.data,
-        interviewers: third.data,
+        interviewers: Object.values(third.data),
       }));
     });
   }, []);
 
-  const appointment = dailyAppointments.map((ele, index) => (
-    <Appointment
-      key={ele.id}
-      {...ele}
-      // id={ele.id}
-      // time={ele.time}
-      // interview={ele.interview}
-    />
-  ));
+  function bookInterview(id, interview) {
+    console.log(id, interview);
+  }
+
+  const appointments = getAppointmentsForDay(state, state.day);
+  const interviewers = getInterviewersForDay(state, state.day);
+
+  const schedule = appointments.map((appointment) => {
+    const interview = getInterview(state, appointment.interview);
+    return (
+      <Appointment
+        key={appointment.id}
+        id={appointment.id}
+        time={appointment.time}
+        interview={interview}
+        interviewers={interviewers}
+        bookInterview={bookInterview}
+      />
+    );
+  });
+
+  // const appointment = dailyAppointments.map((ele, index) => (
+  //   <Appointment
+  //     key={ele.id}
+  //     {...ele}
+  //     // id={ele.id}
+  //     // time={ele.time}
+  //     // interview={ele.interview}
+  //   />
+  // ));
 
   const setDay = (day) => setState({ ...state, day });
   // const setDays = (days) => {
@@ -78,7 +102,7 @@ export default function Application(props) {
         />
       </section>
       <section className="schedule">
-        {appointment}
+        {schedule}
         <Appointment key="last" time="5pm" />
       </section>
     </main>

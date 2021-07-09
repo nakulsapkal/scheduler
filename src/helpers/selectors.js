@@ -1,5 +1,4 @@
 export function getAppointmentsForDay(state, day) {
-  console.log("State,Day:", state, day);
   let resultObj = [];
   for (const key in state.days) {
     if (Object.hasOwnProperty.call(state.days, key)) {
@@ -22,4 +21,57 @@ export function getAppointmentsForDay(state, day) {
   }
   return resultObj;
   //... returns an array of appointments for that day
+}
+
+export function getInterview(state, interview) {
+  let resultObj = {
+    /*{  
+    "student": "Lydia Miller-Jones",
+    "interviewer": {  
+      "id": 1,
+      "name": "Sylvia Palmer",
+      "avatar": "https://i.imgur.com/LpaY82x.png"
+    }
+  }*/
+  };
+
+  if (interview) {
+    for (const interviewer in state.interviewers) {
+      if (Object.hasOwnProperty.call(state.interviewers, interviewer)) {
+        const interviewingPerson = state.interviewers[interviewer];
+        if (interviewingPerson.id === interview.interviewer) {
+          resultObj.student = interview.student;
+          resultObj.interviewer = interviewingPerson;
+        }
+      }
+    }
+    return resultObj;
+  } else {
+    return null;
+  }
+}
+
+export function getInterviewersForDay(state, day) {
+  let resultObj = [];
+  for (const key in state.days) {
+    if (Object.hasOwnProperty.call(state.days, key)) {
+      const element = state.days[key];
+      if (element.name === day) {
+        const arr = [...element.interviewers];
+
+        for (const interview in state.interviewers) {
+          if (Object.hasOwnProperty.call(state.interviewers, interview)) {
+            const element = state.interviewers[interview];
+            arr.forEach((ele) => {
+              if (element.id === ele) {
+                resultObj.push(element);
+              }
+            });
+          }
+        }
+      }
+    }
+  }
+  return resultObj;
+  //... returns an array of interviewers for that day
 }
