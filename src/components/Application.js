@@ -66,8 +66,30 @@ export default function Application(props) {
     });
   }
 
-  function cancelInterview(id) {
-    console.log("Cancel:", id);
+  function cancelInterview(id, interview) {
+    const appointment = {
+      ...state.appointments[id],
+      interview: {},
+    };
+
+    const appointments = {
+      ...state.appointments,
+      [id]: appointment,
+    };
+
+    console.log("Here:--->", appointments);
+    return Axios.delete(`/api/appointments/${id}`, { interview })
+      .then((results) => {
+        setState({
+          ...state,
+          appointments,
+        });
+      })
+      .catch((error) => {
+        console.log(error.response.status);
+        console.log(error.response.headers);
+        console.log(error.response.data);
+      });
   }
 
   const appointments = getAppointmentsForDay(state, state.day);
@@ -83,6 +105,7 @@ export default function Application(props) {
         interview={interview}
         interviewers={interviewers}
         bookInterview={bookInterview}
+        cancelInterview={cancelInterview}
       />
     );
   });
