@@ -1,6 +1,5 @@
 import React from "react";
 import Button from "components/Button";
-import { action } from "@storybook/addon-actions/dist/preview";
 export default function Confirm(props) {
   return (
     <main className="appointment__card appointment__card--confirm">
