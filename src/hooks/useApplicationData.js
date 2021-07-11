@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import Axios from "axios";
 
 export default function useApplicationData(params) {
@@ -11,11 +11,6 @@ export default function useApplicationData(params) {
   });
 
   useEffect(() => {
-    // const url = `/api/days`;
-    // Axios.get(url).then((response) => {
-    //   console.log("response:", response.data);
-    //   setDays([...response.data]);
-    //});
     const p1 = Promise.resolve(Axios.get("/api/days"));
     const p2 = Promise.resolve(Axios.get("/api/appointments"));
     const p3 = Promise.resolve(Axios.get("/api/interviewers"));
@@ -46,6 +41,12 @@ export default function useApplicationData(params) {
       [id]: appointment,
     };
 
+    const dayObj = state.days.find((day) => day.name === state.day);
+
+    const remainingSpots = spots(dayObj, appointments);
+
+    state.days[dayObj.id - 1].spots = remainingSpots;
+
     return Axios.put(`/api/appointments/${id}`, { interview }).then(() => {
       setState({
         ...state,
@@ -57,13 +58,20 @@ export default function useApplicationData(params) {
   function cancelInterview(id, interview) {
     const appointment = {
       ...state.appointments[id],
-      interview: {},
+      interview: null,
     };
 
     const appointments = {
       ...state.appointments,
       [id]: appointment,
     };
+
+    const dayObj = state.days.find((day) => day.name === state.day);
+
+    const remainingSpots = spots(dayObj, appointments);
+    console.log("dayObj:-->", appointments, appointment);
+
+    state.days[dayObj.id - 1].spots = remainingSpots;
 
     return Axios.delete(`/api/appointments/${id}`, { interview }).then(
       (results) => {
@@ -76,6 +84,16 @@ export default function useApplicationData(params) {
   }
 
   const setDay = (day) => setState({ ...state, day });
+
+  function spots(dayObj, appointments) {
+    let count = 0;
+    for (const id of dayObj.appointments) {
+      if (appointments[id].interview === null) {
+        count++;
+      }
+    }
+    return count;
+  }
 
   return { state, bookInterview, cancelInterview, setDay };
 }
