@@ -81,7 +81,7 @@ export default function Appointment(props) {
         )}
         {mode === CONFIRM && (
           <Confirm
-            message="Delete the appointment?"
+            message="Are you sure you would like to delete?"
             onConfirm={destroy}
             onCancel={() => transition(SHOW)}
           />
@@ -89,7 +89,7 @@ export default function Appointment(props) {
         {mode === DELETE && <Status message="Deleting.." />}
         {mode === ERROR_DELETE && (
           <Error
-            message="Could not delete appointment"
+            message="Could not cancel appointment"
             onClose={() => transition(SHOW)}
           />
         )}
