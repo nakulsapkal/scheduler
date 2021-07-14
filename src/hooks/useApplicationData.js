@@ -41,8 +41,11 @@ export default function useApplicationData(params) {
       [id]: appointment,
     };
 
-    updateSpots(state, appointments);
-    //console.log("dayObj:-->", state, days);
+    const dayObj = state.days.find((day) => day.name === state.day);
+
+    const remainingSpots = spots(dayObj, appointments);
+
+    state.days[dayObj.id - 1].spots = remainingSpots;
 
     return Axios.put(`/api/appointments/${id}`, { interview }).then(() => {
       setState({
@@ -63,11 +66,12 @@ export default function useApplicationData(params) {
       [id]: appointment,
     };
 
-    updateSpots(state, appointments);
+    const dayObj = state.days.find((day) => day.name === state.day);
 
-    // const dayObj = state.days.find((day) => day.name === state.day);
-    // const remainingSpots = spots(dayObj, appointments);
-    // state.days[dayObj.id - 1].spots = remainingSpots;
+    const remainingSpots = spots(dayObj, appointments);
+    console.log("dayObj:-->", appointments, appointment);
+
+    state.days[dayObj.id - 1].spots = remainingSpots;
 
     return Axios.delete(`/api/appointments/${id}`, { interview }).then(
       (results) => {
@@ -81,31 +85,14 @@ export default function useApplicationData(params) {
 
   const setDay = (day) => setState({ ...state, day });
 
-  function updateSpots(incomingState, appointments) {
+  function spots(dayObj, appointments) {
     let count = 0;
-    const state = { ...incomingState };
-    const dayObj = state.days.find((day) => day.name === state.day);
-    const dayObjIndex = state.days.findIndex((day) => day.name === state.day);
     for (const id of dayObj.appointments) {
       if (appointments[id].interview === null) {
         count++;
       }
     }
-
-    // const day = {
-    //   ...dayObj,
-    //   spots: count,
-    // };
-
-    // const days = {
-    //   ...state.days,
-    //   [dayObjIndex]: day,
-    // };
-
-    // console.log("dayObj", dayObj, day, dayObjIndex);
-    state.days[dayObjIndex].spots = count;
-    //return count;
-    //return days;
+    return count;
   }
 
   return { state, bookInterview, cancelInterview, setDay };
