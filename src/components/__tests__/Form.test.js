@@ -39,50 +39,9 @@ describe("Form", () => {
     /* 3. Click the save button */
     fireEvent.click(getByText("Save"));
 
+    //Verified the data from DOM
     expect(getByText(/student name cannot be blank/i)).toBeInTheDocument();
     expect(onSave).not.toHaveBeenCalled();
-
-    /* Above Test Implementation Explanation:
-      We render the Form component with an empty name prop. Clicking the button which we simulate through the fireEvent helpers causes the error text to render. Using queries and matchers we can determine if the validation message is in the document.
-
-      We also check the call count of the mock function. This detail is another behaviour that we can verify is working correctly. When the user clicks the "Save" button, it calls the onSave action with the name and interviewer as arguments.
-      */
-  });
-
-  xit("calls onSave function when the name is defined", () => {
-    /* 1. Create the mock onSave function */
-    const onSave = jest.fn();
-
-    /* 2. Render the Form with interviewers, name and the onSave mock function passed as an onSave prop */
-    const { queryByText, getByText } = render(
-      <Form
-        interviewers={interviewers}
-        name="Lydia Miller-Jones"
-        onSave={onSave}
-      />
-    );
-
-    /* 3. Click the save button */
-    fireEvent.click(getByText("Save"));
-
-    expect(queryByText(/student name cannot be blank/i)).toBeNull();
-    expect(onSave).toHaveBeenCalledTimes(1);
-    expect(onSave).toHaveBeenCalledWith("Lydia Miller-Jones", null);
-  });
-
-  xit("submits the name entered by the user", () => {
-    const onSave = jest.fn();
-    const { getByText, getByPlaceholderText } = render(
-      <Form interviewers={interviewers} onSave={onSave} />
-    );
-
-    const input = getByPlaceholderText("Enter Student Name");
-
-    fireEvent.change(input, { target: { value: "Lydia Miller-Jones" } });
-    fireEvent.click(getByText("Save"));
-
-    expect(onSave).toHaveBeenCalledTimes(1);
-    expect(onSave).toHaveBeenCalledWith("Lydia Miller-Jones", null);
   });
 
   it("can successfully save after trying to submit an empty student name", () => {

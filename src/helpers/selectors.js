@@ -20,20 +20,10 @@ export function getAppointmentsForDay(state, day) {
     }
   }
   return resultObj;
-  //... returns an array of appointments for that day
 }
 
 export function getInterview(state, interview) {
-  let resultObj = {
-    /*{  
-    "student": "Lydia Miller-Jones",
-    "interviewer": {  
-      "id": 1,
-      "name": "Sylvia Palmer",
-      "avatar": "https://i.imgur.com/LpaY82x.png"
-    }
-  }*/
-  };
+  let resultObj = {};
 
   if (interview) {
     for (const interviewer in state.interviewers) {
@@ -73,5 +63,4 @@ export function getInterviewersForDay(state, day) {
     }
   }
   return resultObj;
-  //... returns an array of interviewers for that day
 }

@@ -38,7 +38,6 @@ describe("Application", () => {
     });
   });
 
-  //async awit example
   it("changes the schedule when a new day is selected", async () => {
     const { getByText } = render(<Application />);
 
@@ -123,46 +122,30 @@ describe("Application", () => {
   });
 
   it("loads data, edits an interview and keeps the spots remaining for Monday the same", async () => {
-    // We want to start by finding an existing interview.
-    // With the existing interview we want to find the edit button.
-    // We change the name and save the interview.
-    // We don't want the spots to change for "Monday", since this is an edit.
-    // Read the errors because sometimes they say that await cannot be outside of an async function.
-
-    // 1.Render a application.
     const { container, debug } = render(<Application />);
 
-    // 2.wait until the text "Archie Cohen" is displayed.
     await waitForElement(() => getByText(container, "Archie Cohen"));
 
-    // 3.click the Edit button on booked appointment.
     const appointment = getAllByTestId(container, "appointment").find(
       (appointment) => queryByText(appointment, "Archie Cohen")
     );
 
     fireEvent.click(queryByAltText(appointment, "Edit"));
 
-    // 4.Check if the form has earlier student name
     expect(getByTestId(appointment, "student-name-input"));
-
-    // 5.Change the interviewr or name or both for apointment.
 
     fireEvent.change(getByPlaceholderText(appointment, "Enter Student Name"), {
       target: { value: "Lydia Miller-Jones" },
     });
 
-    // 6.Click the save button.
     act(() => {
       fireEvent.click(getByText(appointment, "Save"));
     });
 
-    // 7. Check the element with the text "Saving" is displayed.
     expect(getByText(appointment, "SAVING")).toBeInTheDocument();
 
-    // 8. Wait until the element with new name is displyed on the appointment.
     await waitForElement(() => queryByText(appointment, "Lydia Miller-Jones"));
 
-    // 9. Check that the dayListItem with thetext "Monday" also has the test "1 spot remaining"
     const day = getAllByTestId(container, "day").find((day) =>
       queryByText(day, "Monday")
     );
@@ -170,7 +153,6 @@ describe("Application", () => {
     expect(getByText(day, "1 spot remaining")).toBeInTheDocument();
   });
 
-  /* test number five */
   it("shows the save error when failing to save an appointment", async () => {
     axios.put.mockRejectedValueOnce();
     const { container, debug } = render(<Application />);
@@ -206,12 +188,6 @@ describe("Application", () => {
     fireEvent.click(queryByAltText(appointment, "Close"));
 
     await waitForElement(() => getByAltText(appointment, "Add"));
-
-    // const day = getAllByTestId(container, "day").find((day) =>
-    //   queryByText(day, "Monday")
-    // );
-
-    // expect(getByText(day, "1 spot remaining")).toBeInTheDocument();
   });
 
   it("shows the delete error when failing to delete an existing appointment", async () => {
@@ -244,11 +220,5 @@ describe("Application", () => {
     fireEvent.click(queryByAltText(appointment, "Close"));
 
     await waitForElement(() => getByText(container, "Archie Cohen"));
-
-    // const day = getAllByTestId(container, "day").find((day) =>
-    //   queryByText(day, "Tuesday")
-    // );
-
-    // expect(getByText(day, "1 spot remaining")).toBeInTheDocument();
   });
 });
