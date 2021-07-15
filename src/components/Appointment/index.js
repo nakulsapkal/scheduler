@@ -25,12 +25,15 @@ export default function Appointment(props) {
     props.interview ? SHOW : EMPTY
   );
 
+  //Function handles saving  and editing of an interview appointment and the mode related to those
   function save(name, interviewer, edit = false) {
     const interview = {
       student: name,
       interviewer,
     };
 
+    /*Handling transition in case of edit state mode as the appointment 
+    already exists so nned to go in edit state instead of saving state*/
     if (edit) {
       transition(EDIT);
     } else {
@@ -41,9 +44,10 @@ export default function Appointment(props) {
       .then(() => {
         transition(SHOW);
       })
-      .catch((error) => transition(ERROR_SAVE, true));
+      .catch(() => transition(ERROR_SAVE, true));
   }
 
+  /*Handling transition in case of delete state mode of the appointment */
   function destroy() {
     transition(DELETE, true);
     props
@@ -51,9 +55,10 @@ export default function Appointment(props) {
       .then(() => {
         transition(EMPTY);
       })
-      .catch((error) => transition(ERROR_DELETE, true));
+      .catch(() => transition(ERROR_DELETE, true));
   }
 
+  //This return function handles all the modes of the state and depending on that rendering the components as per the mode and props
   return (
     <>
       <article className="appointment" data-testid="appointment">

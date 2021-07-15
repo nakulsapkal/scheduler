@@ -9,16 +9,12 @@ import {
   waitForElement,
   fireEvent,
   getByText,
-  prettyDOM,
   getAllByTestId,
   getByAltText,
   getByPlaceholderText,
   queryByText,
   getByTestId,
   queryByAltText,
-  queryByPlaceholderText,
-  queryByDisplayValue,
-  queryByTestId,
 } from "@testing-library/react";
 
 import Application from "components/Application";
@@ -96,7 +92,6 @@ describe("Application", () => {
     const appointment = getAllByTestId(container, "appointment").find(
       (appointment) => queryByText(appointment, "Archie Cohen")
     );
-
     fireEvent.click(queryByAltText(appointment, "Delete"));
 
     // 4. Check that the confirmation message is shown.

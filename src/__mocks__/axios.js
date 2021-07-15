@@ -1,3 +1,4 @@
+//Mock Api Request/Response File used for Testing purpose
 const fixtures = {
   days: [
     {
