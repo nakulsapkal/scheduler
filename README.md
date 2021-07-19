@@ -19,6 +19,11 @@ Interview Scheduler is a full stack web application built using React library th
 - Storybook, Webpack Dev Server, Jest, Testing Library
 - Cypress Testing Framework
 
+## PSQL- Database
+
+1. scheduler_development
+2. scheduler_test
+
 ## Setup
 
 Install dependencies with `npm install`.
@@ -39,4 +44,22 @@ npm test
 
 ```sh
 npm run storybook
+```
+
+## Running Backend Schedular API Development Mode
+
+```sh
+npm start
+```
+
+## Running Backend Schedular API Test Mode
+
+```sh
+test:server npm start
+```
+
+## Running Backend Schedular API Error Mode
+
+```sh
+npm run error
 ```
