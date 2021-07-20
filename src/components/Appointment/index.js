@@ -39,12 +39,17 @@ export default function Appointment(props) {
     } else {
       transition(SAVING);
     }
+
     props
       .bookInterview(props.id, interview)
       .then(() => {
         transition(SHOW);
       })
-      .catch(() => transition(ERROR_SAVE, true));
+      .catch((error) => {
+        console.log("error", error);
+
+        transition(ERROR_SAVE, true);
+      });
   }
 
   /*Handling transition in case of delete state mode of the appointment */
@@ -55,7 +60,10 @@ export default function Appointment(props) {
       .then(() => {
         transition(EMPTY);
       })
-      .catch(() => transition(ERROR_DELETE, true));
+      .catch((error) => {
+        console.log("error", error);
+        transition(ERROR_DELETE, true);
+      });
   }
 
   //This return function handles all the modes of the state and depending on that rendering the components as per the mode and props
@@ -66,11 +74,13 @@ export default function Appointment(props) {
         {mode === SHOW && (
           <Show
             student={props.interview.student}
-            interviewer={props.interview.interviewer.name}
+            interviewer={props.interview.interviewer}
             onDelete={() => {
               transition(CONFIRM);
             }}
-            onEdit={save}
+            onEdit={() => {
+              transition(EDIT);
+            }}
           />
         )}
         {mode === EDIT && (
@@ -79,16 +89,14 @@ export default function Appointment(props) {
             interviewer={props.interview.interviewer.id}
             interviewers={props.interviewers}
             onSave={save}
-            onCancel={() => {
-              back();
-            }}
+            onCancel={back}
           />
         )}
         {mode === CONFIRM && (
           <Confirm
             message="Are you sure you would like to delete?"
             onConfirm={destroy}
-            onCancel={() => transition(SHOW)}
+            onCancel={back}
           />
         )}
         {mode === DELETE && <Status message="Deleting.." />}
@@ -109,9 +117,7 @@ export default function Appointment(props) {
           <Form
             interviewers={props.interviewers}
             onSave={save}
-            onCancel={() => {
-              back();
-            }}
+            onCancel={back}
           />
         )}
         {mode === SAVING && <Status message={SAVING} />}
